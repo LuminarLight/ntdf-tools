@@ -831,7 +831,50 @@ Sound length: ${sound_length}
 				document.addEventListener("mouseup", mouseup);
 			});
 			button.style.marginLeft = "40px";
-			contentelem.appendChild(button);
+			contentelem.appendChild(button);			
+					
+			let save = document.createElement("input");
+			save.type = "button";
+			save.value = "Save .wav";
+			let source2 = null;
+			save.addEventListener("click", async () => {
+				/*let ctx = new OfflineAudioContext(2, (track.seconds+silence_seconds.value/loop_count.value)*48000*loop_count.value, 48000);
+					
+				let player = new MidiPlayer(sbv2, track, ctx, loop_count.value);
+				player.channel_mask = calc_channel_mask();
+				player.reverb_enabled = reverb_toggle.checked;
+				player.play();
+				
+				let buf = await ctx.startRendering();
+				saveAs(new Blob([to_wav(buf)], {type:'audio/wav'}), sbv2.tag + "-" + i + ".wav");*/
+				
+				let sound = region_obj.sound;
+				let source2 = audio_context.createBufferSource();
+				source2.playbackRate.value = handle_midi_pitch(region_pitch_a, region_pitch_b, Math.floor((region_note_start + region_note_end) / 2)) / 4096;
+				source2.buffer = sound.buffer;
+				saveAs(new Blob([to_wav(source2.buffer)], {type:'audio/wav'}), sbv2.tag + "_sample-" + i + ".wav");
+				
+				/*let ctxx = new OfflineAudioContext(2, 5*48000, 48000);
+				let sound = region_obj.sound;
+				let source2 = audio_context.createBufferSource();
+				source2.buffer = sound.buffer;
+				source2.connect(audio_context.destination);
+				source2.loop = sound.loop;
+				source2.loopStart = sound.loop_start;
+				source2.loopEnd = sound.loop_end;
+				source2.playbackRate.value = handle_midi_pitch(region_pitch_a, region_pitch_b, Math.floor((region_note_start + region_note_end) / 2)) / 4096;
+				source2.start();
+				let buf = source2.render;
+				saveAs(new Blob([to_wav(buf)], {type:'audio/wav'}), sbv2.tag + "_sample-" + i + ".wav");*/
+				
+				/*let sound = decode_adpcm(file, sound_start, file.length, sample_rate);
+				let source = audio_context.createBufferSource();
+				source.buffer = sound.buffer;
+				source.connect(audio_context.destination);
+				source.start();*/
+			});
+			contentelem.appendChild(document.createTextNode("\t"));
+			contentelem.appendChild(save);
 		}
 	}
 }
